@@ -32,6 +32,6 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method Not Allowed' });
   } catch (err) {
     console.error('api/memories error', err);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: err.message || 'Internal Server Error' });
   }
 };

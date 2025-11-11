@@ -8,14 +8,19 @@ let cachedDb = global.__mongoDb;
 async function getDb() {
   if (cachedDb) return { db: cachedDb, client: cachedClient };
   const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sweet_memories';
-  const client = new MongoClient(uri);
-  await client.connect();
-  const db = client.db();
-  cachedClient = client;
-  cachedDb = db;
-  global.__mongoClient = client;
-  global.__mongoDb = db;
-  return { db, client };
+  try {
+    const client = new MongoClient(uri);
+    await client.connect();
+    const db = client.db();
+    cachedClient = client;
+    cachedDb = db;
+    global.__mongoClient = client;
+    global.__mongoDb = db;
+    return { db, client };
+  } catch (err) {
+    console.error('MongoDB connect error:', err);
+    throw new Error(`MongoDB connection failed: ${err.message}`);
+  }
 }
 
 function getCloudinary() {

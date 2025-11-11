@@ -19,6 +19,6 @@ module.exports = async (req, res) => {
     });
   } catch (err) {
     console.error('api/upload error', err);
-    return res.status(500).json({ error: 'Upload failed' });
+    return res.status(500).json({ error: err.message || 'Upload failed' });
   }
 };

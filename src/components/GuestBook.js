@@ -40,9 +40,14 @@ function GuestBook() {
   React.useEffect(() => {
     (async () => {
       try {
-        const resp = await fetch('/api/guestbook');
+        const resp = await fetch('/api/guestbook', { headers: { 'Accept': 'application/json' } });
+        const ct = resp.headers.get('content-type') || '';
+        if (!resp.ok || !ct.includes('application/json')) {
+          const text = await resp.text().catch(() => '');
+          throw new Error(`API /api/guestbook returned ${resp.status}. Body: ${text.slice(0, 120)}`);
+        }
         const data = await resp.json();
-        setMessages(data || []);
+        setMessages(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error('Failed to load guestbook', e);
       }

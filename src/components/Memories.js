@@ -9,11 +9,15 @@ function Memories() {
 
   const loadMemories = async () => {
     try {
-      const resp = await fetch('/api/memories');
+      const resp = await fetch('/api/memories', { headers: { 'Accept': 'application/json' } });
+      const ct = resp.headers.get('content-type') || '';
+      if (!resp.ok || !ct.includes('application/json')) {
+        const text = await resp.text().catch(() => '');
+        throw new Error(`API /api/memories returned ${resp.status}. Body: ${text.slice(0, 120)}`);
+      }
       const data = await resp.json();
-      setMemories(data || []);
-      // infer favorites client-side from server field
-      setFavorites((data || []).filter(m => m.favorite).map(m => String(m._id)));
+      setMemories(Array.isArray(data) ? data : []);
+      setFavorites((Array.isArray(data) ? data : []).filter(m => m.favorite).map(m => String(m._id)));
     } catch (e) {
       console.error('Failed to fetch memories', e);
     }
