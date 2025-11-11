@@ -21,7 +21,7 @@ function Header() {
       >
         {/* Logo */}
         <motion.div className="logo" whileHover={{ scale: 1.05 }}>
-          <img src="/love.gif" alt="Love" className="logo-icon" />
+          <span className="logo-emoji" role="img" aria-label="Love">💖</span>
           <h1 className="logo-text">Abir & MoonMoon</h1>
         </motion.div>
 
@@ -47,12 +47,8 @@ function Header() {
           className={`search-bar ${isFocused ? 'focused' : ''}`}
           animate={{ boxShadow: isFocused ? '0 4px 20px rgba(165, 61, 80, 0.15)' : '0 2px 8px rgba(0, 0, 0, 0.08)' }}
         >
-          {/* Tulip GIF */}
-          <img
-            src="/tulip.gif"
-            alt="Tulip"
-            className="tulip-gif"
-          />
+          {/* Tulip indicator (emoji replaces missing GIF) */}
+          <span className="tulip-emoji" role="img" aria-label="Tulip">🌷</span>
 
           {/* Input */}
           <input

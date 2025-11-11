@@ -7,14 +7,16 @@ function Memories() {
   const [memories, setMemories] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
-  const loadMemories = () => {
-    // Load memories from localStorage
-    const savedMemories = JSON.parse(localStorage.getItem('savedMemories') || '[]');
-    setMemories(savedMemories);
-
-    // Load favorites from localStorage
-    const savedFavorites = JSON.parse(localStorage.getItem('favoriteMemories') || '[]');
-    setFavorites(savedFavorites);
+  const loadMemories = async () => {
+    try {
+      const resp = await fetch('/api/memories');
+      const data = await resp.json();
+      setMemories(data || []);
+      // infer favorites client-side from server field
+      setFavorites((data || []).filter(m => m.favorite).map(m => String(m._id)));
+    } catch (e) {
+      console.error('Failed to fetch memories', e);
+    }
   };
 
   useEffect(() => {
@@ -22,45 +24,37 @@ function Memories() {
   }, []);
 
   useEffect(() => {
-    // Listen for storage changes (when memories are saved)
-    const handleStorageChange = () => {
-      loadMemories();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    // Also listen for custom event when memory is saved
-    window.addEventListener('memoryAdded', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('memoryAdded', handleStorageChange);
-    };
+    const handleRefresh = () => loadMemories();
+    window.addEventListener('memoryAdded', handleRefresh);
+    return () => window.removeEventListener('memoryAdded', handleRefresh);
   }, []);
 
-  const handleToggleFavorite = (memoryId) => {
-    setFavorites((prev) => {
-      const newFavorites = prev.includes(memoryId)
-        ? prev.filter((id) => id !== memoryId)
-        : [...prev, memoryId];
-      localStorage.setItem('favoriteMemories', JSON.stringify(newFavorites));
-      return newFavorites;
-    });
+  const handleToggleFavorite = async (memoryId) => {
+    try {
+      const isFav = favorites.includes(String(memoryId));
+      await fetch(`/api/memories/${memoryId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ favorite: !isFav }),
+      });
+      await loadMemories();
+    } catch (e) {
+      console.error('Failed to toggle favorite', e);
+    }
   };
 
-  const handleDeleteMemory = (memoryId) => {
-    setMemories((prev) => {
-      const updated = prev.filter((m) => m.id !== memoryId);
-      localStorage.setItem('savedMemories', JSON.stringify(updated));
-      return updated;
-    });
-
-    // Also remove from favorites
-    setFavorites((prev) => prev.filter((id) => id !== memoryId));
+  const handleDeleteMemory = async (memoryId) => {
+    try {
+      await fetch(`/api/memories/${memoryId}`, { method: 'DELETE' });
+      await loadMemories();
+    } catch (e) {
+      console.error('Failed to delete memory', e);
+    }
   };
 
   const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
-  const favoriteMemories = sortedMemories.filter((m) => favorites.includes(m.id));
-  const otherMemories = sortedMemories.filter((m) => !favorites.includes(m.id));
+  const favoriteMemories = sortedMemories.filter((m) => favorites.includes(String(m._id)));
+  const otherMemories = sortedMemories.filter((m) => !favorites.includes(String(m._id)));
 
   if (memories.length === 0) {
     return (
@@ -110,7 +104,7 @@ function Memories() {
               <AnimatePresence>
                 {favoriteMemories.map((memory, index) => (
                   <motion.div
-                    key={memory.id}
+                    key={String(memory._id || memory.id)}
                     className="memory-card favorite"
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -128,7 +122,7 @@ function Memories() {
                         <h4>{memory.title}</h4>
                         <motion.button
                           className="favorite-btn active"
-                          onClick={() => handleToggleFavorite(memory.id)}
+                          onClick={() => handleToggleFavorite(memory._id)}
                           whileHover={{ scale: 1.2 }}
                           whileTap={{ scale: 0.9 }}
                         >
@@ -140,7 +134,7 @@ function Memories() {
                       <p className="memory-description">{memory.description}</p>
                       <motion.button
                         className="delete-btn"
-                        onClick={() => handleDeleteMemory(memory.id)}
+                        onClick={() => handleDeleteMemory(memory._id)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -172,7 +166,7 @@ function Memories() {
               <AnimatePresence>
                 {otherMemories.map((memory, index) => (
                   <motion.div
-                    key={memory.id}
+                    key={String(memory._id || memory.id)}
                     className="memory-card"
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -190,7 +184,7 @@ function Memories() {
                         <h4>{memory.title}</h4>
                         <motion.button
                           className="favorite-btn"
-                          onClick={() => handleToggleFavorite(memory.id)}
+                          onClick={() => handleToggleFavorite(memory._id)}
                           whileHover={{ scale: 1.2 }}
                           whileTap={{ scale: 0.9 }}
                         >
@@ -202,7 +196,7 @@ function Memories() {
                       <p className="memory-description">{memory.description}</p>
                       <motion.button
                         className="delete-btn"
-                        onClick={() => handleDeleteMemory(memory.id)}
+                        onClick={() => handleDeleteMemory(memory._id)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >

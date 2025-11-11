@@ -3,10 +3,7 @@ import { motion } from 'framer-motion';
 import '../styles/GuestBook.css';
 
 function GuestBook() {
-  const [messages, setMessages] = useState([
-    { id: 1, name: 'Sarah & Mike', message: 'Beautiful journey together! 💕', date: '2024-01-15' },
-    { id: 2, name: 'Emma', message: 'Love is in the air! This is so romantic.', date: '2024-01-10' },
-  ]);
+  const [messages, setMessages] = useState([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -21,19 +18,36 @@ function GuestBook() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.name.trim() && formData.message.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        name: formData.name,
-        message: formData.message,
-        date: new Date().toISOString().split('T')[0],
-      };
-      setMessages([newMessage, ...messages]);
+    if (!(formData.name.trim() && formData.message.trim())) return;
+    try {
+      const resp = await fetch('/api/guestbook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: formData.name.trim(), message: formData.message.trim() }),
+      });
+      if (!resp.ok) throw new Error('Failed to add message');
+      const saved = await resp.json();
+      setMessages((prev) => [saved, ...prev]);
       setFormData({ name: '', message: '' });
+    } catch (e) {
+      console.error(e);
+      alert('Unable to post message');
     }
   };
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const resp = await fetch('/api/guestbook');
+        const data = await resp.json();
+        setMessages(data || []);
+      } catch (e) {
+        console.error('Failed to load guestbook', e);
+      }
+    })();
+  }, []);
 
   return (
     <section className="guest-book" id="guest-book">
@@ -106,7 +120,7 @@ function GuestBook() {
                 >
                   <div className="message-header">
                     <h4>{msg.name}</h4>
-                    <span className="message-date">{msg.date}</span>
+                    <span className="message-date">{new Date(msg.createdAt || msg.date).toISOString().slice(0,10)}</span>
                   </div>
                   <p>{msg.message}</p>
                 </motion.div>

@@ -48,8 +48,8 @@ function FolderGallery() {
       color: '#ff6b9d',
       isSpecial: true,
       photos: [
-        { id: 1, image: '/love-story.jpg', caption: 'Our Love Story' },
-        { id: 2, image: '/couple-hero.jpg', caption: 'Us Against the World' },
+        { id: 1, image: '/gallery/IMG-20251020-WA0333.jpg', caption: 'Our Love Story' },
+        { id: 2, image: '/gallery/IMG-20251020-WA0346.jpg', caption: 'Us Against the World' },
       ]
     }
   ]);

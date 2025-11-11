@@ -41,64 +41,48 @@ function CreateMemory() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Create memory object
-    const newMemory = {
-      id: Date.now(),
-      title: formData.title,
-      date: formData.date,
-      description: formData.description,
-      tag: formData.tag,
-      image: null,
-    };
 
-    // Convert file to base64 if exists
-    if (formData.fileInput) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        newMemory.image = event.target.result;
-        
-        // Get existing memories
-        const existingMemories = JSON.parse(localStorage.getItem('savedMemories') || '[]');
-        existingMemories.push(newMemory);
-        
-        // Save to localStorage
-        localStorage.setItem('savedMemories', JSON.stringify(existingMemories));
-        
-        // Dispatch custom event to notify other components
-        window.dispatchEvent(new Event('memoryAdded'));
-        
-        console.log('Memory saved:', newMemory);
-        setIsSubmitted(true);
-        setTimeout(() => {
-          setFormData({ title: '', date: getTodayDate(), description: '', tag: 'Random Laughs', fileInput: null });
-          if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-          }
-          setIsSubmitted(false);
-        }, 2000);
-      };
-      reader.readAsDataURL(formData.fileInput);
-    } else {
-      // Save without image
-      const existingMemories = JSON.parse(localStorage.getItem('savedMemories') || '[]');
-      existingMemories.push(newMemory);
-      localStorage.setItem('savedMemories', JSON.stringify(existingMemories));
-      
-      // Dispatch custom event to notify other components
+    try {
+      let base64 = null;
+      if (formData.fileInput) {
+        base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (ev) => resolve(ev.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(formData.fileInput);
+        });
+      }
+
+      const resp = await fetch('/api/memories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          date: formData.date,
+          description: formData.description,
+          tag: formData.tag,
+          image: base64,
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error || 'Failed to save memory');
+      }
+
+      // Notify list to refresh
       window.dispatchEvent(new Event('memoryAdded'));
-      
-      console.log('Memory saved:', newMemory);
       setIsSubmitted(true);
       setTimeout(() => {
         setFormData({ title: '', date: getTodayDate(), description: '', tag: 'Random Laughs', fileInput: null });
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
+        if (fileInputRef.current) fileInputRef.current.value = '';
         setIsSubmitted(false);
-      }, 2000);
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
     }
   };
 
