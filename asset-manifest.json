@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/sweet_memories_frontend/static/css/main.43a67c41.css",
-    "main.js": "/sweet_memories_frontend/static/js/main.eb35b28c.js",
+    "main.js": "/sweet_memories_frontend/static/js/main.8f6d3406.js",
     "static/js/488.beea1ad9.chunk.js": "/sweet_memories_frontend/static/js/488.beea1ad9.chunk.js",
     "index.html": "/sweet_memories_frontend/index.html",
     "main.43a67c41.css.map": "/sweet_memories_frontend/static/css/main.43a67c41.css.map",
-    "main.eb35b28c.js.map": "/sweet_memories_frontend/static/js/main.eb35b28c.js.map",
+    "main.8f6d3406.js.map": "/sweet_memories_frontend/static/js/main.8f6d3406.js.map",
     "488.beea1ad9.chunk.js.map": "/sweet_memories_frontend/static/js/488.beea1ad9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.43a67c41.css",
-    "static/js/main.eb35b28c.js"
+    "static/js/main.8f6d3406.js"
   ]
 }
