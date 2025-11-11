@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Anniversary! 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* Anniversary Popup */
+        .anniversary-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            background: linear-gradient(135deg, #ffffff 0%, #ffeef8 100%);
+            border-radius: 30px;
+            padding: 50px 40px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            z-index: 1001;
+            animation: popupAppear 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            opacity: 1;
+        }
+        
+        @keyframes popupAppear {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        /* Hearts Background */
+        .hearts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            animation: floatHeart 6s infinite ease-in-out;
+            opacity: 0;
+        }
+        
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Main Icon */
+        .anniversary-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.1);
+            }
+        }
+        
+        /* Title */
+        .anniversary-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            font-weight: 700;
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes titleGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(245, 87, 108, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(245, 87, 108, 0.8));
+            }
+        }
+        
+        /* Subtitle */
+        .anniversary-subtitle {
+            font-size: 18px;
+            color: #6b46c1;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        
+        /* Counter Box */
+        .counter-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .counter-number {
+            font-size: 64px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+        
+        .counter-label {
+            font-size: 16px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        
+        /* Message */
+        .anniversary-message {
+            font-size: 16px;
+            color: #4a5568;
+            line-height: 1.8;
+            margin: 25px 0;
+            font-weight: 400;
+        }
+        
+        .anniversary-message strong {
+            color: #f5576c;
+            font-weight: 600;
+        }
+        
+        /* Close Button */
+        .close-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+            margin-top: 20px;
+        }
+        
+        .close-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.5);
+        }
+        
+        .close-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #fff 0%, transparent 70%);
+            border-radius: 50%;
+            animation: sparkleAnimation 1.5s infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes sparkleAnimation {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Footer Styles */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 16px 40px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+        
+        .footer-heart {
+            color: #f5576c;
+            font-size: 14px;
+            display: inline-block;
+            animation: subtleHeartBeat 2s ease-in-out infinite;
+        }
+        
+        @keyframes subtleHeartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .footer-divider {
+            color: #cbd5e1;
+            margin: 0 4px;
+        }
+        
+        .footer-year {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .anniversary-popup {
+                padding: 40px 25px;
+                max-width: 95%;
+            }
+            
+            .anniversary-title {
+                font-size: 36px;
+            }
+            
+            .anniversary-icon {
+                font-size: 60px;
+            }
+            
+            .counter-number {
+                font-size: 48px;
+            }
+            
+            .footer {
+                padding: 12px 20px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+    
+    <!-- Anniversary Popup -->
+    <div class="anniversary-popup">
+        <!-- Hearts Background -->
+        <div class="hearts-container" id="heartsContainer"></div>
+        
+        <!-- Icon -->
+        <div class="anniversary-icon">💖</div>
+        
+        <!-- Title -->
+        <h1 class="anniversary-title">Happy Anniversary!</h1>
+        
+        <!-- Subtitle -->
+        <p class="anniversary-subtitle">Celebrating Our Love Story</p>
+        
+        <!-- Counter -->
+        <div class="counter-box">
+            <div class="counter-number" id="monthCounter">0</div>
+            <div class="counter-label">Months Together</div>
+        </div>
+        
+        <!-- Message -->
+        <p class="anniversary-message">
+            Since <strong>June 12, 2024</strong>, every moment with you has been magical. 
+            Here's to many more beautiful memories together! 💕✨
+        </p>
+        
+        <!-- Close Button -->
+        <button class="close-btn" onclick="closePopup()">
+            Celebrate! 🎉
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <span class="footer-text">© <span class="footer-year">2024-2025</span></span>
+        <span class="footer-divider">|</span>
+        <span class="footer-text">Made with <span class="footer-heart">♥</span></span>
+    </footer>
+
+    <script>
+        // Anniversary Configuration
+        const ANNIVERSARY_START = new Date('2024-06-12');
+        
+        // Temporarily set to today's date for testing (remove after seeing output)
+        const TODAY = new Date('2025-11-11'); // Change this to new Date() after testing
+        
+        // Calculate months
+        function calculateMonths() {
+            const years = TODAY.getFullYear() - ANNIVERSARY_START.getFullYear();
+            const months = TODAY.getMonth() - ANNIVERSARY_START.getMonth();
+            const totalMonths = years * 12 + months;
+            return totalMonths;
+        }
+        
+        // Check if it's anniversary day (12th of any month)
+        function isAnniversaryDay() {
+            return TODAY.getDate() === 11; // Temporarily set to 11 for testing - change back to 12
+        }
+        
+        // Animate counter
+        function animateCounter() {
+            const targetMonths = calculateMonths();
+            const counterElement = document.getElementById('monthCounter');
+            let current = 0;
+            const increment = targetMonths / 50;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= targetMonths) {
+                    counterElement.textContent = targetMonths;
+                    clearInterval(timer);
+                } else {
+                    counterElement.textContent = Math.floor(current);
+                }
+            }, 30);
+        }
+        
+        // Confetti Animation
+        function createConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const confettiPieces = [];
+            const confettiCount = 150;
+            const colors = ['#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#ffd700', '#ff69b4'];
+            
+            class Confetti {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = -20;
+                    this.size = Math.random() * 8 + 5;
+                    this.speed = Math.random() * 3 + 2;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = Math.random() * 10 - 5;
+                    this.swing = Math.random() * 2 - 1;
+                }
+                
+                update() {
+                    this.y += this.speed;
+                    this.x += this.swing;
+                    this.rotation += this.rotationSpeed;
+                    
+                    if (this.y > canvas.height) {
+                        this.y = -20;
+                        this.x = Math.random() * canvas.width;
+                    }
+                }
+                
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation * Math.PI / 180);
+                    ctx.fillStyle = this.color;
+                    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                    ctx.restore();
+                }
+            }
+            
+            for (let i = 0; i < confettiCount; i++) {
+                confettiPieces.push(new Confetti());
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                confettiPieces.forEach(piece => {
+                    piece.update();
+                    piece.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        // Create floating hearts
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💞'];
+            
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                container.appendChild(heart);
+            }
+        }
+        
+        // Create sparkles
+        function createSparkles() {
+            const popup = document.querySelector('.anniversary-popup');
+            
+            setInterval(() => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                popup.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 1500);
+            }, 300);
+        }
+        
+        // Close popup
+        function closePopup() {
+            const popup = document.querySelector('.anniversary-popup');
+            popup.style.animation = 'none';
+            popup.style.transform = 'translate(-50%, -50%) scale(0)';
+            popup.style.opacity = '0';
+            
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 300);
+        }
+        
+        // Show popup only on anniversary day
+        function checkAndShowPopup() {
+            // TEMPORARY: Always show for testing - remove this comment and restore original logic after testing
+            console.log('Initializing anniversary popup...');
+            animateCounter();
+            createConfetti();
+            createFloatingHearts();
+            createSparkles();
+            console.log('Anniversary popup initialized!');
+            
+            setTimeout(() => {
+                console.log('Starting popup animation...');
+            }, 100);
+            
+            /* ORIGINAL CODE - Uncomment after testing:
+            if (isAnniversaryDay()) {
+                const lastShown = localStorage.getItem('anniversaryPopupShown');
+                const todayString = TODAY.toDateString();
+                
+                if (lastShown !== todayString) {
+                    setTimeout(() => {
+                        animateCounter();
+                        createConfetti();
+                        createFloatingHearts();
+                        createSparkles();
+                        localStorage.setItem('anniversaryPopupShown', todayString);
+                    }, 500);
+                } else {
+                    document.querySelector('.anniversary-popup').style.display = 'none';
+                }
+            } else {
+                document.querySelector('.anniversary-popup').style.display = 'none';
+            }
+            */
+        }
+        
+        // Initialize
+        window.addEventListener('load', checkAndShowPopup);
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('confetti-canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

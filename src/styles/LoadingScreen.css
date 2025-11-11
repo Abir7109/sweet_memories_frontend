@@ -1,0 +1,89 @@
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  z-index: 2;
+}
+
+/* Rose Container - holds spinner and image */
+.rose-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Spinning Loading Circle */
+.loading-spinner {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.spinner-circle {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border: 4px solid rgba(0, 0, 0, 0.08);
+  border-top: 4px solid #a53d50;
+  border-right: 4px solid #b84a5c;
+  border-bottom: 4px solid rgba(0, 0, 0, 0.08);
+  border-left: 4px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  box-shadow: inset 0 0 15px rgba(165, 61, 80, 0.1),
+              0 0 25px rgba(165, 61, 80, 0.15);
+}
+
+/* Rose Image */
+.rose-image {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  z-index: 2;
+  filter: drop-shadow(0 6px 15px rgba(0, 0, 0, 0.12));
+  border-radius: 50%;
+  border: 5px solid white;
+  box-shadow: 0 0 25px rgba(165, 61, 80, 0.2);
+  background: white;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+.loading-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.02), transparent);
+  pointer-events: none;
+}

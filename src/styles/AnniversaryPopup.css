@@ -1,0 +1,244 @@
+/* Confetti Canvas */
+.confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+/* Overlay */
+.anniversary-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Anniversary Popup */
+.anniversary-popup {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #ffeef8 100%);
+  border-radius: 30px;
+  padding: 50px 40px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  animation: popupAppear 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@keyframes popupAppear {
+  0% {
+    transform: scale(0) rotate(-10deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Hearts Background */
+.hearts-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.3;
+  border-radius: 30px;
+}
+
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: floatHeart 6s infinite ease-in-out;
+  opacity: 0;
+}
+
+@keyframes floatHeart {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Main Icon */
+.anniversary-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+  }
+}
+
+/* Title */
+.anniversary-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 48px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 10px;
+  font-weight: 700;
+  animation: titleGlow 2s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(245, 87, 108, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(245, 87, 108, 0.8));
+  }
+}
+
+/* Subtitle */
+.anniversary-subtitle {
+  font-size: 18px;
+  color: #6b46c1;
+  margin-bottom: 25px;
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+}
+
+/* Counter Box */
+.counter-box {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 20px;
+  padding: 25px;
+  margin: 25px 0;
+  box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+  animation: pulse 2s infinite;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.counter-number {
+  font-size: 64px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.counter-label {
+  font-size: 16px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+/* Message */
+.anniversary-message {
+  font-size: 16px;
+  color: #4a5568;
+  line-height: 1.8;
+  margin: 25px 0;
+  font-weight: 400;
+  position: relative;
+  z-index: 2;
+}
+
+.anniversary-message strong {
+  color: #f5576c;
+  font-weight: 600;
+}
+
+/* Close Button */
+.close-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+  margin-top: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.close-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(245, 87, 108, 0.5);
+}
+
+.close-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .anniversary-popup {
+    padding: 40px 25px;
+    max-width: 95%;
+  }
+  
+  .anniversary-title {
+    font-size: 36px;
+  }
+  
+  .anniversary-icon {
+    font-size: 60px;
+  }
+  
+  .counter-number {
+    font-size: 48px;
+  }
+}
