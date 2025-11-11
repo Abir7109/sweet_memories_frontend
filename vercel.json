@@ -3,5 +3,9 @@
   "builds": [
     { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "build" } },
     { "src": "api/**/*.js", "use": "@vercel/node" }
+  ],
+  "headers": [
+    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
+    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
   ]
 }
