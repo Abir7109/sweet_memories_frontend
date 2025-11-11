@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunksweet_memories=self.webpackChunksweet_memories||[]).push([[488],{488:(_,e,s)=>{s.d(e,{API_BASE:()=>S});const S=(window.__API_BASE__||{NODE_ENV:"production",PUBLIC_URL:"/sweet_memories_frontend",WDS_SOCKET_HOST:void 0,WDS_SOCKET_PATH:void 0,WDS_SOCKET_PORT:void 0,FAST_REFRESH:!0}.REACT_APP_API_BASE||"").replace(/\/$/,"")}}]);
+//# sourceMappingURL=488.beea1ad9.chunk.js.map
