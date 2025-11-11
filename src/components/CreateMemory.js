@@ -55,7 +55,8 @@ function CreateMemory() {
         });
       }
 
-      const resp = await fetch('/api/memories', {
+      const { API_BASE } = await import('../config');
+      const resp = await fetch(`${API_BASE}/api/memories`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

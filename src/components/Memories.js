@@ -9,7 +9,8 @@ function Memories() {
 
   const loadMemories = async () => {
     try {
-      const resp = await fetch('/api/memories', { headers: { 'Accept': 'application/json' } });
+      const { API_BASE } = await import('../config');
+      const resp = await fetch(`${API_BASE}/api/memories`, { headers: { 'Accept': 'application/json' } });
       const ct = resp.headers.get('content-type') || '';
       if (!resp.ok || !ct.includes('application/json')) {
         const text = await resp.text().catch(() => '');
@@ -36,7 +37,8 @@ function Memories() {
   const handleToggleFavorite = async (memoryId) => {
     try {
       const isFav = favorites.includes(String(memoryId));
-      await fetch(`/api/memories/${memoryId}`, {
+      const { API_BASE } = await import('../config');
+      await fetch(`${API_BASE}/api/memories/${memoryId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ favorite: !isFav }),
@@ -49,7 +51,8 @@ function Memories() {
 
   const handleDeleteMemory = async (memoryId) => {
     try {
-      await fetch(`/api/memories/${memoryId}`, { method: 'DELETE' });
+      const { API_BASE } = await import('../config');
+      await fetch(`${API_BASE}/api/memories/${memoryId}`, { method: 'DELETE' });
       await loadMemories();
     } catch (e) {
       console.error('Failed to delete memory', e);

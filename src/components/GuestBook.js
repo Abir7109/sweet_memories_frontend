@@ -22,7 +22,8 @@ function GuestBook() {
     e.preventDefault();
     if (!(formData.name.trim() && formData.message.trim())) return;
     try {
-      const resp = await fetch('/api/guestbook', {
+      const { API_BASE } = await import('../config');
+      const resp = await fetch(`${API_BASE}/api/guestbook`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: formData.name.trim(), message: formData.message.trim() }),
@@ -40,7 +41,8 @@ function GuestBook() {
   React.useEffect(() => {
     (async () => {
       try {
-        const resp = await fetch('/api/guestbook', { headers: { 'Accept': 'application/json' } });
+        const { API_BASE } = await import('../config');
+        const resp = await fetch(`${API_BASE}/api/guestbook`, { headers: { 'Accept': 'application/json' } });
         const ct = resp.headers.get('content-type') || '';
         if (!resp.ok || !ct.includes('application/json')) {
           const text = await resp.text().catch(() => '');
